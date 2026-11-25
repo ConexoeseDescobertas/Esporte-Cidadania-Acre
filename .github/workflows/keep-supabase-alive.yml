@@ -1,0 +1,17 @@
+name: Manter Supabase Ativo
+
+on:
+  schedule:
+    # Executa automaticamente a cada 5 dias às 08:00 UTC
+    - cron: "0 8 */5 * *"
+  workflow_dispatch: # Permite rodar manualmente para testar
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consultar API do Supabase
+        run: |
+          curl -i -X GET "https://ioxlqbakmwssjovzuylc.supabase.co/rest/v1/pre_inscricoes_2027?select=id&limit=1" \
+          -H "apikey: sb_publishable_l-ntfbRnXftCg6T4TLGb2w_EOp0dixU" \
+          -H "Authorization: Bearer sb_publishable_l-ntfbRnXftCg6T4TLGb2w_EOp0dixU"
