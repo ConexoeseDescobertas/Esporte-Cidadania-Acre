@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Esporte & Cidadania Acre | Hub Comunitário 2027</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
       rel="stylesheet"
@@ -41,11 +42,11 @@
         body * {
           visibility: hidden;
         }
-        #area-impressao,
-        #area-impressao * {
+        .imprimindo-ativo,
+        .imprimindo-ativo * {
           visibility: visible;
         }
-        #area-impressao {
+        .imprimindo-ativo {
           position: absolute;
           left: 0;
           top: 0;
@@ -143,7 +144,6 @@
     <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full">
       <!-- ABA 1: ESCOLINHAS E POLOS -->
       <section id="sec-escolinhas" class="space-y-6">
-        <!-- Indicadores Rápidos -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div
             class="bg-white p-4 rounded-xl shadow-sm border border-slate-200"
@@ -187,7 +187,6 @@
           </div>
         </div>
 
-        <!-- Filtros -->
         <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
@@ -247,7 +246,6 @@
           </div>
         </div>
 
-        <!-- Grade de Polos -->
         <div
           id="lista-polos"
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
@@ -419,6 +417,7 @@
             <div class="pt-2 flex flex-wrap gap-3">
               <button
                 type="submit"
+                id="btn-salvar-atleta"
                 class="bg-acre hover:bg-acre-dark text-white font-bold px-6 py-2.5 rounded-lg text-sm transition shadow"
               >
                 <i class="fa-solid fa-check mr-1.5"></i> Gerar Comprovante de
@@ -439,7 +438,7 @@
             class="hidden border-t border-slate-200 p-6 bg-slate-50"
           >
             <div
-              id="area-impressao"
+              id="area-impressao-atleta"
               class="bg-white border-2 border-green-800 rounded-xl p-6 max-w-xl mx-auto"
             >
               <div class="flex justify-between items-center border-b pb-3 mb-4">
@@ -470,7 +469,7 @@
 
             <div class="mt-4 flex flex-wrap justify-center gap-3 no-print">
               <button
-                onclick="window.print()"
+                onclick="imprimirElemento('area-impressao-atleta')"
                 class="bg-slate-800 hover:bg-slate-900 text-white font-semibold px-4 py-2 rounded-lg text-sm"
               >
                 <i class="fa-solid fa-print mr-1.5"></i> Imprimir / Salvar PDF
@@ -492,7 +491,6 @@
       <!-- ABA 3: TORNEIOS & FICHA DE EQUIPE -->
       <section id="sec-torneios" class="hidden space-y-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <!-- Calendário de Torneios Comunitários -->
           <div
             class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden"
           >
@@ -561,7 +559,6 @@
             </div>
           </div>
 
-          <!-- Gerador de Ficha de Inscrição de Equipe -->
           <div
             class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden"
           >
@@ -633,7 +630,6 @@
           </div>
         </div>
 
-        <!-- Visualização da Ficha de Equipe -->
         <div
           id="box-ficha-time"
           class="hidden bg-white p-6 rounded-xl border-2 border-slate-800 max-w-3xl mx-auto"
@@ -667,6 +663,14 @@
     </footer>
 
     <script>
+      // Configuração do Banco de Dados Supabase
+      const SUPABASE_URL = "https://ioxlqbakmwssjovzuylc.supabase.co";
+      const SUPABASE_ANON_KEY = "COLE_AQUI_A_CHAVE_ANON_PUBLIC";
+      const supabaseClient = supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY,
+      );
+
       // Base de dados inicial dos polos comunitários (fácil de editar)
       const polosEsportivos = [
         {
@@ -827,23 +831,65 @@
         document.getElementById("atleta-modalidade").value = modalidade;
       }
 
-      function gerarComprovanteAtleta(e) {
+      function imprimirElemento(elementId) {
+        document
+          .querySelectorAll(".imprimindo-ativo")
+          .forEach((el) => el.classList.remove("imprimindo-ativo"));
+        const alvo = document.getElementById(elementId);
+        if (!alvo) return;
+        alvo.classList.add("imprimindo-ativo");
+        window.print();
+        setTimeout(() => alvo.classList.remove("imprimindo-ativo"), 500);
+      }
+
+      async function gerarComprovanteAtleta(e) {
         e.preventDefault();
-        const nome = document.getElementById("atleta-nome").value;
-        const nasc = document
-          .getElementById("atleta-nascimento")
-          .value.split("-")
-          .reverse()
-          .join("/");
+
+        const btnSubmit = document.getElementById("btn-salvar-atleta");
+        const textoOriginalBtn = btnSubmit.innerHTML;
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML =
+          '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Salvando online...';
+
+        const nome = document.getElementById("atleta-nome").value.trim();
+        const nascISO = document.getElementById("atleta-nascimento").value;
+        const nasc = nascISO.split("-").reverse().join("/");
         const polo = document.getElementById("atleta-polo").value;
         const mod = document.getElementById("atleta-modalidade").value;
-        const resp = document.getElementById("resp-nome").value;
-        const whats = document.getElementById("resp-whats").value;
-        const escola = document.getElementById("atleta-escola").value;
+        const resp = document.getElementById("resp-nome").value.trim();
+        const whats = document.getElementById("resp-whats").value.trim();
+        const escola = document.getElementById("atleta-escola").value.trim();
         const turno = document.getElementById("atleta-turno").value;
 
         const protocolo = "ECA-" + Math.floor(100000 + Math.random() * 900000);
         const hoje = new Date().toLocaleDateString("pt-BR");
+
+        const { error } = await supabaseClient
+          .from("pre_inscricoes_2027")
+          .insert([
+            {
+              protocolo,
+              nome_atleta: nome,
+              data_nascimento: nascISO,
+              polo_escolinha: polo,
+              modalidade: mod,
+              nome_responsavel: resp,
+              whatsapp_responsavel: whats,
+              escola,
+              turno_escolar: turno,
+            },
+          ]);
+
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = textoOriginalBtn;
+
+        if (error) {
+          alert(
+            "Não foi possível salvar no banco de dados online: " +
+              error.message,
+          );
+          return;
+        }
 
         document.getElementById("comp-protocolo").innerText = protocolo;
         document.getElementById("comp-data").innerText = "Emitido em: " + hoje;
@@ -899,7 +945,7 @@
           .join("");
 
         document.getElementById("conteudo-ficha-time").innerHTML = `
-        <div id="area-impressao">
+        <div id="area-impressao-time">
           <div class="border-b-2 border-slate-800 pb-3 mb-4 flex justify-between items-center">
             <div>
               <p class="text-xs font-bold uppercase text-green-800">Esporte & Cidadania Acre • Competições Comunitárias 2027</p>
@@ -938,10 +984,9 @@
       }
 
       function imprimirFichaTime() {
-        window.print();
+        imprimirElemento("area-impressao-time");
       }
 
-      // Inicializa a lista ao carregar
       renderizarPolos();
     </script>
   </body>
