@@ -162,7 +162,7 @@
             <p class="text-xs text-slate-500 uppercase font-bold">
               Modalidades
             </p>
-            <p class="text-2xl font-extrabold text-acre mt-1">4</p>
+            <p class="text-2xl font-extrabold text-acre mt-1">4+</p>
             <p class="text-xs text-slate-400 mt-0.5">100% Gratuitas</p>
           </div>
           <div
@@ -171,9 +171,9 @@
             <p class="text-xs text-slate-500 uppercase font-bold">
               Faixa Etária
             </p>
-            <p class="text-2xl font-extrabold text-acre mt-1">6 a 17</p>
+            <p class="text-2xl font-extrabold text-acre mt-1">6 a 17+</p>
             <p class="text-xs text-slate-400 mt-0.5">
-              Anos (Categorias de Base)
+              Base, Juvenil, Adulto e Master
             </p>
           </div>
           <div
@@ -491,6 +491,7 @@
       <!-- ABA 3: TORNEIOS & FICHA DE EQUIPE -->
       <section id="sec-torneios" class="hidden space-y-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Calendário de Torneios Comunitários -->
           <div
             class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden"
           >
@@ -559,77 +560,188 @@
             </div>
           </div>
 
+          <!-- Gerador e Inscrição de Equipe / Atleta em Torneio -->
           <div
             class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden"
           >
             <div class="bg-slate-800 text-white px-5 py-4">
               <h2 class="font-bold text-base">
-                <i class="fa-solid fa-users-line mr-2"></i>Gerador de Ficha de
-                Inscrição de Equipe
+                <i class="fa-solid fa-users-line mr-2"></i>Inscrição em
+                Torneio (Equipe ou Atleta Individual)
               </h2>
               <p class="text-xs text-slate-300 mt-0.5">
-                Monte a relação nominal do seu time e imprima a súmula pronta.
+                Válido para qualquer modalidade esportiva • Registra online e
+                gera a ficha oficial.
               </p>
             </div>
-            <div class="p-5 space-y-3">
+            <form
+              id="form-torneio"
+              onsubmit="gerarFichaTime(event)"
+              class="p-5 space-y-3"
+            >
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input
-                  type="text"
-                  id="time-nome"
-                  placeholder="Nome da Equipe (Ex: Amigos do Bairro)"
-                  class="border border-slate-300 rounded-lg px-3 py-2 text-sm"
-                />
-                <input
-                  type="text"
-                  id="time-bairro"
-                  placeholder="Bairro Representado"
-                  class="border border-slate-300 rounded-lg px-3 py-2 text-sm"
-                />
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 mb-1"
+                    >Torneio / Competição *</label
+                  >
+                  <select
+                    id="time-torneio"
+                    required
+                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
+                  >
+                    <option value="Copa Bairro & Cidadania Sub-13/15">
+                      Copa Bairro & Cidadania Sub-13/15
+                    </option>
+                    <option value="Torneio Integração Master 40+">
+                      Torneio Integração Master 40+
+                    </option>
+                    <option value="Corrida Rústica da Juventude Acreana (5km)">
+                      Corrida Rústica da Juventude Acreana (5km)
+                    </option>
+                    <option value="Festival Comunitário de Futsal">
+                      Festival Comunitário de Futsal
+                    </option>
+                    <option value="Copa Aberta de Vôlei & Basquete">
+                      Copa Aberta de Vôlei & Basquete
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 mb-1"
+                    >Modalidade Esportiva *</label
+                  >
+                  <select
+                    id="time-modalidade"
+                    required
+                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
+                  >
+                    <option value="Futebol de Campo">Futebol de Campo</option>
+                    <option value="Futsal">Futsal</option>
+                    <option value="Vôlei">Vôlei</option>
+                    <option value="Atletismo">Atletismo / Corrida</option>
+                    <option value="Basquete">Basquete</option>
+                    <option value="Handebol">Handebol</option>
+                    <option value="Lutas / Artes Marciais">
+                      Lutas / Artes Marciais
+                    </option>
+                    <option value="Outros Esportes">Outros Esportes</option>
+                  </select>
+                </div>
               </div>
+
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input
-                  type="text"
-                  id="time-tecnico"
-                  placeholder="Nome do Técnico / Responsável"
-                  class="border border-slate-300 rounded-lg px-3 py-2 text-sm"
-                />
-                <select
-                  id="time-torneio"
-                  class="border border-slate-300 rounded-lg px-3 py-2 text-sm"
-                >
-                  <option value="Copa Bairro & Cidadania Sub-13/15">
-                    Copa Bairro & Cidadania Sub-13/15
-                  </option>
-                  <option value="Torneio Integração Master 40+">
-                    Torneio Integração Master 40+
-                  </option>
-                  <option value="Festival Comunitário de Futsal">
-                    Festival Comunitário de Futsal
-                  </option>
-                </select>
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 mb-1"
+                    >Categoria *</label
+                  >
+                  <select
+                    id="time-categoria"
+                    required
+                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
+                  >
+                    <option value="Sub-13">Sub-13</option>
+                    <option value="Sub-15">Sub-15</option>
+                    <option value="Juvenil (16-17)">Juvenil (16-17)</option>
+                    <option value="Adulto Livre">Adulto Livre</option>
+                    <option value="Master 40+">Master 40+</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 mb-1"
+                    >Tipo de Inscrição *</label
+                  >
+                  <select
+                    id="time-tipo"
+                    onchange="alternarTipoInscricao()"
+                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
+                  >
+                    <option value="EQUIPE">Equipe / Time</option>
+                    <option value="INDIVIDUAL">Atleta Individual</option>
+                  </select>
+                </div>
               </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div id="campo-nome-equipe">
+                  <label class="block text-xs font-bold text-slate-600 mb-1"
+                    >Nome da Equipe *</label
+                  >
+                  <input
+                    type="text"
+                    id="time-nome"
+                    required
+                    placeholder="Ex: Amigos do Bairro"
+                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 mb-1"
+                    >Bairro Representado</label
+                  >
+                  <input
+                    type="text"
+                    id="time-bairro"
+                    placeholder="Ex: Morada do Sol"
+                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
+                  />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 mb-1"
+                    >Técnico / Responsável *</label
+                  >
+                  <input
+                    type="text"
+                    id="time-tecnico"
+                    required
+                    placeholder="Nome do responsável"
+                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 mb-1"
+                    >WhatsApp do Responsável *</label
+                  >
+                  <input
+                    type="tel"
+                    id="time-whats"
+                    required
+                    placeholder="(68) 99999-0000"
+                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
+                  />
+                </div>
+              </div>
+
               <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1"
-                  >Lista de Atletas (1 nome por linha)</label
+                <label
+                  id="label-lista-atletas"
+                  class="block text-xs font-bold text-slate-600 mb-1"
+                  >Lista de Atletas (1 nome por linha) *</label
                 >
                 <textarea
                   id="time-atletas"
-                  rows="5"
+                  rows="4"
+                  required
                   placeholder="1. Carlos Eduardo Lima&#10;2. Marcos Vinícius Souza&#10;3. Rafael Gomes..."
                   class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
                 ></textarea>
               </div>
+
               <button
-                onclick="gerarFichaTime()"
+                type="submit"
+                id="btn-salvar-torneio"
                 class="w-full bg-acre hover:bg-acre-dark text-white font-bold py-2.5 rounded-lg text-sm transition"
               >
-                <i class="fa-solid fa-file-lines mr-1.5"></i> Gerar Ficha
-                Oficial da Equipe
+                <i class="fa-solid fa-file-lines mr-1.5"></i> Registrar e Gerar
+                Ficha Oficial
               </button>
-            </div>
+            </form>
           </div>
         </div>
 
+        <!-- Visualização da Ficha de Equipe / Atleta -->
         <div
           id="box-ficha-time"
           class="hidden bg-white p-6 rounded-xl border-2 border-slate-800 max-w-3xl mx-auto"
@@ -640,7 +752,7 @@
               onclick="imprimirFichaTime()"
               class="bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-semibold"
             >
-              <i class="fa-solid fa-print mr-1"></i> Imprimir Ficha da Equipe
+              <i class="fa-solid fa-print mr-1"></i> Imprimir Ficha
             </button>
           </div>
         </div>
@@ -663,9 +775,9 @@
     </footer>
 
     <script>
-      // Configuração do Banco de Dados Supabase
+      // Configuração do Banco de Dados Supabase (Projeto ConexoesEDescobertas)
       const SUPABASE_URL = "https://ioxlqbakmwssjovzuylc.supabase.co";
-      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlveGxxYmFrbXdzc2pvdnp1eWxjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTU1NjM2OTAsImV4cCI6MjExMTEzOTY5MH0.HZ8OpShQY2MkD0I2TW_gOzTRW9G3PZvULDpwkpzm6ZA";
+      const SUPABASE_ANON_KEY = "COLE_AQUI_A_CHAVE_ANON_PUBLIC";
       const supabaseClient = supabase.createClient(
         SUPABASE_URL,
         SUPABASE_ANON_KEY,
@@ -831,6 +943,30 @@
         document.getElementById("atleta-modalidade").value = modalidade;
       }
 
+      function alternarTipoInscricao() {
+        const tipo = document.getElementById("time-tipo").value;
+        const campoEquipe = document.getElementById("campo-nome-equipe");
+        const inputEquipe = document.getElementById("time-nome");
+        const labelAtletas = document.getElementById("label-lista-atletas");
+        const textareaAtletas = document.getElementById("time-atletas");
+
+        if (tipo === "INDIVIDUAL") {
+          campoEquipe.classList.add("hidden");
+          inputEquipe.required = false;
+          inputEquipe.value = "";
+          labelAtletas.innerText = "Nome Completo do(a) Atleta *";
+          textareaAtletas.rows = 2;
+          textareaAtletas.placeholder = "Ex: Lucas Gabriel Silva";
+        } else {
+          campoEquipe.classList.remove("hidden");
+          inputEquipe.required = true;
+          labelAtletas.innerText = "Lista de Atletas (1 nome por linha) *";
+          textareaAtletas.rows = 4;
+          textareaAtletas.placeholder =
+            "1. Carlos Eduardo Lima\n2. Marcos Vinícius Souza\n3. Rafael Gomes...";
+        }
+      }
+
       function imprimirElemento(elementId) {
         document
           .querySelectorAll(".imprimindo-ativo")
@@ -913,20 +1049,69 @@
           .scrollIntoView({ behavior: "smooth" });
       }
 
-      function gerarFichaTime() {
-        const time = document.getElementById("time-nome").value.trim();
+      async function gerarFichaTime(e) {
+        e.preventDefault();
+
+        const torneio = document.getElementById("time-torneio").value;
+        const modalidade = document.getElementById("time-modalidade").value;
+        const categoria = document.getElementById("time-categoria").value;
+        const tipoInscricao = document.getElementById("time-tipo").value;
+        const time =
+          tipoInscricao === "EQUIPE"
+            ? document.getElementById("time-nome").value.trim()
+            : null;
         const bairro = document.getElementById("time-bairro").value.trim();
         const tecnico = document.getElementById("time-tecnico").value.trim();
-        const torneio = document.getElementById("time-torneio").value;
+        const whats = document.getElementById("time-whats").value.trim();
         const atletas = document
           .getElementById("time-atletas")
           .value.trim()
           .split("\n")
-          .filter((l) => l.trim() !== "");
+          .map((l) => l.replace(/^\d+[\.\-\)]\s*/, "").trim())
+          .filter((l) => l !== "");
 
-        if (!time || !tecnico || atletas.length === 0) {
+        if (tipoInscricao === "EQUIPE" && !time) {
+          alert("Preencha o nome da equipe.");
+          return;
+        }
+        if (!tecnico || !whats || atletas.length === 0) {
           alert(
-            "Preencha o nome da equipe, o responsável e pelo menos um atleta.",
+            "Preencha o responsável, o WhatsApp e pelo menos um atleta.",
+          );
+          return;
+        }
+
+        const btnSubmit = document.getElementById("btn-salvar-torneio");
+        const textoOriginal = btnSubmit.innerHTML;
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML =
+          '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Salvando inscrição...';
+
+        const protocolo = "TOR-" + Math.floor(100000 + Math.random() * 900000);
+
+        const { error } = await supabaseClient
+          .from("inscricoes_torneios_2027")
+          .insert([
+            {
+              protocolo,
+              torneio_nome: torneio,
+              modalidade,
+              categoria,
+              tipo_inscricao: tipoInscricao,
+              nome_equipe: time,
+              bairro: bairro || "Rio Branco - AC",
+              responsavel_nome: tecnico,
+              responsavel_whatsapp: whats,
+              atletas,
+            },
+          ]);
+
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = textoOriginal;
+
+        if (error) {
+          alert(
+            "Não foi possível salvar a inscrição do torneio: " + error.message,
           );
           return;
         }
@@ -936,7 +1121,7 @@
             (atleta, i) => `
         <tr class="border-b">
           <td class="py-1.5 px-2 text-center font-bold">${i + 1}</td>
-          <td class="py-1.5 px-2">${atleta.replace(/^\d+[\.\-\)]\s*/, "")}</td>
+          <td class="py-1.5 px-2">${atleta}</td>
           <td class="py-1.5 px-2 text-slate-400">___________________</td>
           <td class="py-1.5 px-2 text-slate-400">___________</td>
         </tr>
@@ -944,20 +1129,30 @@
           )
           .join("");
 
+        const tituloFicha =
+          tipoInscricao === "EQUIPE"
+            ? "Ficha Oficial de Inscrição de Equipe"
+            : "Ficha Oficial de Inscrição Individual";
+
         document.getElementById("conteudo-ficha-time").innerHTML = `
         <div id="area-impressao-time">
-          <div class="border-b-2 border-slate-800 pb-3 mb-4 flex justify-between items-center">
+          <div class="border-b-2 border-slate-800 pb-3 mb-4 flex justify-between items-start gap-2">
             <div>
               <p class="text-xs font-bold uppercase text-green-800">Esporte & Cidadania Acre • Competições Comunitárias 2027</p>
-              <h3 class="text-xl font-extrabold uppercase">Ficha Oficial de Inscrição de Equipe</h3>
+              <h3 class="text-xl font-extrabold uppercase">${tituloFicha}</h3>
             </div>
-            <span class="text-xs font-mono border border-slate-400 px-2 py-1 rounded">Data: ${new Date().toLocaleDateString("pt-BR")}</span>
+            <div class="text-right text-xs font-mono">
+              <div class="bg-green-100 text-green-900 font-bold px-2 py-1 rounded mb-1">${protocolo}</div>
+              <span class="border border-slate-400 px-2 py-0.5 rounded">Data: ${new Date().toLocaleDateString("pt-BR")}</span>
+            </div>
           </div>
-          <div class="grid grid-cols-2 gap-2 text-sm mb-4 bg-slate-50 p-3 rounded border">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm mb-4 bg-slate-50 p-3 rounded border">
             <p><strong>Competição:</strong> ${torneio}</p>
-            <p><strong>Equipe:</strong> ${time}</p>
+            <p><strong>Modalidade / Categoria:</strong> ${modalidade} • ${categoria}</p>
+            ${tipoInscricao === "EQUIPE" ? `<p><strong>Equipe:</strong> ${time}</p>` : `<p><strong>Tipo:</strong> Atleta Individual</p>`}
             <p><strong>Bairro:</strong> ${bairro || "Rio Branco - AC"}</p>
-            <p><strong>Técnico/Responsável:</strong> ${tecnico}</p>
+            <p><strong>Responsável:</strong> ${tecnico}</p>
+            <p><strong>WhatsApp:</strong> ${whats}</p>
           </div>
           <table class="w-full text-xs border border-slate-300">
             <thead class="bg-slate-100 border-b border-slate-300">
@@ -971,7 +1166,7 @@
             <tbody>${linhasTabela}</tbody>
           </table>
           <div class="mt-8 pt-4 flex justify-between text-xs text-slate-600">
-            <div>_______________________________________<br>Assinatura do Responsável pela Equipe</div>
+            <div>_______________________________________<br>Assinatura do Responsável</div>
             <div>_______________________________________<br>Visto da Organização</div>
           </div>
         </div>
